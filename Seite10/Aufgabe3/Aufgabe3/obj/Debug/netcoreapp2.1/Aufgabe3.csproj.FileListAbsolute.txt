@@ -1,0 +1,11 @@
+H:\unterricht\klasse 11\ainf\Aufgabe3\Aufgabe3\bin\Debug\netcoreapp2.1\Aufgabe3.deps.json
+H:\unterricht\klasse 11\ainf\Aufgabe3\Aufgabe3\bin\Debug\netcoreapp2.1\Aufgabe3.runtimeconfig.json
+H:\unterricht\klasse 11\ainf\Aufgabe3\Aufgabe3\bin\Debug\netcoreapp2.1\Aufgabe3.runtimeconfig.dev.json
+H:\unterricht\klasse 11\ainf\Aufgabe3\Aufgabe3\bin\Debug\netcoreapp2.1\Aufgabe3.dll
+H:\unterricht\klasse 11\ainf\Aufgabe3\Aufgabe3\bin\Debug\netcoreapp2.1\Aufgabe3.pdb
+H:\unterricht\klasse 11\ainf\Aufgabe3\Aufgabe3\obj\Debug\netcoreapp2.1\Aufgabe3.csproj.CoreCompileInputs.cache
+H:\unterricht\klasse 11\ainf\Aufgabe3\Aufgabe3\obj\Debug\netcoreapp2.1\Aufgabe3.AssemblyInfoInputs.cache
+H:\unterricht\klasse 11\ainf\Aufgabe3\Aufgabe3\obj\Debug\netcoreapp2.1\Aufgabe3.AssemblyInfo.cs
+H:\unterricht\klasse 11\ainf\Aufgabe3\Aufgabe3\obj\Debug\netcoreapp2.1\Aufgabe3.dll
+H:\unterricht\klasse 11\ainf\Aufgabe3\Aufgabe3\obj\Debug\netcoreapp2.1\Aufgabe3.pdb
+H:\unterricht\klasse 11\ainf\Aufgabe3\Aufgabe3\obj\Debug\netcoreapp2.1\Aufgabe3.csprojAssemblyReference.cache

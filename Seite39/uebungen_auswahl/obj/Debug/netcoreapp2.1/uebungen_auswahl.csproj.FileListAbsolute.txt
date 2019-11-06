@@ -1,0 +1,11 @@
+H:\unterricht\klasse 11\ainf\uebungen_auswahl\uebungen_auswahl\bin\Debug\netcoreapp2.1\uebungen_auswahl.deps.json
+H:\unterricht\klasse 11\ainf\uebungen_auswahl\uebungen_auswahl\bin\Debug\netcoreapp2.1\uebungen_auswahl.runtimeconfig.json
+H:\unterricht\klasse 11\ainf\uebungen_auswahl\uebungen_auswahl\bin\Debug\netcoreapp2.1\uebungen_auswahl.runtimeconfig.dev.json
+H:\unterricht\klasse 11\ainf\uebungen_auswahl\uebungen_auswahl\bin\Debug\netcoreapp2.1\uebungen_auswahl.dll
+H:\unterricht\klasse 11\ainf\uebungen_auswahl\uebungen_auswahl\bin\Debug\netcoreapp2.1\uebungen_auswahl.pdb
+H:\unterricht\klasse 11\ainf\uebungen_auswahl\uebungen_auswahl\obj\Debug\netcoreapp2.1\uebungen_auswahl.csproj.CoreCompileInputs.cache
+H:\unterricht\klasse 11\ainf\uebungen_auswahl\uebungen_auswahl\obj\Debug\netcoreapp2.1\uebungen_auswahl.AssemblyInfoInputs.cache
+H:\unterricht\klasse 11\ainf\uebungen_auswahl\uebungen_auswahl\obj\Debug\netcoreapp2.1\uebungen_auswahl.AssemblyInfo.cs
+H:\unterricht\klasse 11\ainf\uebungen_auswahl\uebungen_auswahl\obj\Debug\netcoreapp2.1\uebungen_auswahl.dll
+H:\unterricht\klasse 11\ainf\uebungen_auswahl\uebungen_auswahl\obj\Debug\netcoreapp2.1\uebungen_auswahl.pdb
+H:\unterricht\klasse 11\ainf\uebungen_auswahl\uebungen_auswahl\obj\Debug\netcoreapp2.1\uebungen_auswahl.csprojAssemblyReference.cache
