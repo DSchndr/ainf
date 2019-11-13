@@ -11,13 +11,13 @@ namespace Seite42
             Console.OutputEncoding = Encoding.UTF8;
             try
             {
-                P5();
+                /*P5();
                 P6();
-                P7();
+                P7(); */
                 P8();
-                P9();
-                P10();
-                P11();
+                //P9();
+                //P10();
+                //P11();
             }
             catch
             {
@@ -88,17 +88,17 @@ namespace Seite42
                 Console.WriteLine("A ist gleich wie B");
             }
         }
-        static void P8()
+        static void P8() //Funktion für aufgabe 8
         {
             Console.Write("\nProblemstellung 8 | 'Teenie-Check' \nAlter: ");
-            int alter = Convert.ToInt16(Console.ReadLine());
+            byte alter = Convert.ToByte(Console.ReadLine()); //0-255
             Console.Write("Altersgruppe: ");
-            if (alter <= 12 && alter >= 0)
+            if (alter <= 12)                    //Alter zwischen 0 und 12?
             {
-                Console.Write("Kids");
-                return;
+                Console.Write("Kids");          //Altersgruppe ausgeben
+                return;                         //Funktion verlassen
             }
-            if (alter <= 19)
+            if (alter <= 19)                    //Alter zwischen 13 und 19?
             {
                 Console.Write("Teenies");
                 return;
