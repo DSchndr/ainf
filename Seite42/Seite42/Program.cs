@@ -8,23 +8,32 @@ namespace Seite42
     {
         static void Main(string[] args)
         {
+            // Die Windows console ist kacke.
             Console.OutputEncoding = Encoding.UTF8;
+
+            // "versuchen" die funktionen der aufgaben auszuführen
             try
             {
                 /*P5();
                 P6();
                 P7(); */
-                P8();
+                //P8();
+                P8_2();
                 //P9();
                 //P10();
                 //P11();
             }
+
+            // Ein fehler ist aufgetreten
             catch
             {
                 Console.WriteLine("Ürgendwas blödes ist passiert :(");
             }
+
+            //Auf den nutzer warten
             Console.ReadLine();
         }
+
         static void P5()
         {
             //"Ganze Zahl" = int? :P
@@ -79,15 +88,16 @@ namespace Seite42
             {
                 Console.WriteLine("A ist größer als B");
             }
-            if (B > A)
+            else if (B > A)
             {
                 Console.WriteLine("B ist größer als A");
             }
-            if (A == B)
+            else if (A == B)
             {
                 Console.WriteLine("A ist gleich wie B");
             }
         }
+
         static void P8() //Funktion für aufgabe 8
         {
             Console.Write("\nProblemstellung 8 | 'Teenie-Check' \nAlter: ");
@@ -114,6 +124,21 @@ namespace Seite42
                 return;
             }
         }
+ 
+        //Funktion für Aufgabe 8 | Die Aufgabe kann man auch so lösen:
+        static void P8_2()
+        {
+            Console.Write("\nProblemstellung 8 | 'Teenie-Check' \nAlter: ");
+            byte alter = Convert.ToByte(Console.ReadLine()); //Wertebereich 0-255
+            Console.Write("Altersgruppe: ");
+
+            // Wir können in dem fall die geschweiften Klammern weglassen
+            if (alter <= 12) Console.Write("Kids");         //Alter zwischen 0 und 12?
+            else if (alter <= 19) Console.Write("Teenies"); //Alter zwischen 13 und 19?
+            else if (alter <= 29) Console.Write("Twens");   //Alter zwischen 20 und 29?
+            else Console.Write("Grufties");                 //Alter ist > als 29
+        }
+
         static void P9()
         {
             Console.Write("\n\nProblemstellung 9 | Versandgeschäft \nAuftragswert: ");
@@ -122,11 +147,11 @@ namespace Seite42
             {
                 zuschlag = 1;
             }
-            if (aw < 100 && aw >= 10)
+            else if (aw < 100)
             {
                 zuschlag = 2;
             }
-            if (aw < 200 && aw >= 100)
+            else if (aw < 200)
             {
                 zuschlag = 3;
             }
