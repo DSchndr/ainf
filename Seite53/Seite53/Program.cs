@@ -28,7 +28,13 @@ namespace Seite53
             Console.Write("Problemstellung 1: Anzahl der Vorfahren\n Anzahl der Generationen: ");
             int n = Convert.ToInt32(Console.ReadLine());
             if (n == 0) return false;
-            Console.WriteLine("{0} Vorfahren vor {1} Generationen.", Math.Pow(2, n), n); //2 hoch die Anzahl der generationen
+            
+            int tmp = 1;
+            for (int i = 1; i <= n; i++ ) tmp = tmp * 2;
+
+            Console.WriteLine("{0} Vorfahren vor {1} Generationen.", tmp, n);
+            // Math.Pow wäre ja cheaten ;)
+            //Console.WriteLine("{0} Vorfahren vor {1} Generationen.", Math.Pow(2, n), n); //2 hoch die Anzahl der generationen
             return true;
         }
 
@@ -60,7 +66,12 @@ namespace Seite53
                 { //3 bis nte zeile hat eine zahl im ersten feld
                     b = x.ToString();
                 }
-                Console.WriteLine("\t{0}\t|\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{9}\t{10}", b, 1 * x, 2 * x, 3 * x, 4 * x, 5 * x, 6 * x, 7 * x, 8 * x, 9 * x, 10 * x); //zeile ausgeben
+
+                //Console.WriteLine("\t{0}\t|\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{9}\t{10}", b, 1 * x, 2 * x, 3 * x, 4 * x, 5 * x, 6 * x, 7 * x, 8 * x, 9 * x, 10 * x); //zeile ausgeben
+                Console.Write("\t{0}\t|",b);
+                for (int i = 1; i < 11; i++) Console.Write("\t{0}", i * x);
+                Console.Write("\n");
+
                 if (tmp) { x = -1; tmp = false; } //x wieder auf -1 zurücksetzen
             }
         }
