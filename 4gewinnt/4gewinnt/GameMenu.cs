@@ -1,18 +1,22 @@
+using System.Text;
 using System;
 using System.Runtime.InteropServices;
+
 
 
 namespace _4gewinnt
 {
     class GameMenu
     {
-        public int menu()
+        public GameMenu()
         {
+            Game game = null;
+
             platformcheck();
-            foreach (string s in Menutextarray)
-            {
-                Console.WriteLine(s);
-            }
+
+        A:
+            Console.Clear();
+            Console.WriteLine(Menutext);
 
             while (true)
             {
@@ -21,40 +25,56 @@ namespace _4gewinnt
                     ConsoleKeyInfo key = Console.ReadKey(true);
                     switch (key.Key)
                     {
-                        case ConsoleKey.D1: return 1; //launch offline game
-                        case ConsoleKey.D2: return 2; //launch ai game
-                        case ConsoleKey.D3: return 3; //launch online game
+                        case ConsoleKey.D1: goto C; //launch offline game
+                        case ConsoleKey.D2: GameVariables.dumbai = true; goto C; //launch ai game
+                        case ConsoleKey.D3: GameVariables.onlinegame = true; goto C; //launch online game
                         case ConsoleKey.D4:
                             //set field size
-                            break;
+                            goto A;
                         case ConsoleKey.D5:
                             setBlocksize(); //set block size
-                            return 0;
-                        case ConsoleKey.D7: return -1;
+                            goto A;
+                        case ConsoleKey.D7: goto B;
                     }
                 }
             }
+
+        B:
+            return;
+
+        C:
+            game = new Game();
+            GameVariables.dumbai = false;
+            GameVariables.onlinegame = false;
+            goto A;
         }
+
+        // Setzt die Größe der Blöcke in dem Spiel
         private void setBlocksize()
         {
             Console.WriteLine("Press ESC to return to menu");
             while (true)
             {
                 Console.SetCursorPosition(0, Console.CursorTop);
-                Console.Write("blocksize: {0}x{0}     ", GameSettings.blockscale);
+                Console.Write("blocksize: {0}x{0}   ", GameSettings.blockscale);
                 switch (Console.ReadKey().Key)
                 {
                     case ConsoleKey.Add:
-                        GameSettings.blockscale++;
+                        if (GameSettings.blockscale < 20) GameSettings.blockscale++;
                         break;
                     case ConsoleKey.Subtract:
-                        GameSettings.blockscale--;
+                        if (GameSettings.blockscale > 0) GameSettings.blockscale--;
                         break;
                     case ConsoleKey.Escape:
                         return;
                 }
             }
         }
+
+        /*
+        C# kann die Größe der Console unter linux und macos nicht ändern.
+        Deswegen muss dies der Nutzer machen.
+        */
         private static void platformcheck()
         {
             //check platform and print message, else resize window.
@@ -73,20 +93,20 @@ namespace _4gewinnt
             }
             Console.Clear();
         }
-        private String[] Menutextarray = new String[]
-    {
-                @"4 Gewinnt",
-                @"",
-                @"Spielmodus:",
-                @"[1]: Offline gegen zweiten Spieler spielen",
-                @"[2]: Offline gegen (sehr dumme) AI spielen",
-                @"[3]: Online                        spielen //TODO",
-                @"",
-                @"Einstellungen:",
-                @"[4]: Feldgröße    einstellen //TODO",
-                @"[5]: Blockgröße   einstellen //hack",
-                @"[6]: Spielregeln //TODO",
-                @"[7]: Spiel beenden",
-    };
+        private StringBuilder Menutext = new StringBuilder
+    (
+                "4 Gewinnt\n" +
+                "\n" +
+                "Spielmodus: \n" +
+                "[1]: Offline gegen zweiten Spieler spielen\n" +
+                "[2]: Offline gegen (sehr dumme) AI spielen\n" +
+                "[3]: Online                        spielen //TODO \n" +
+                "\n" +
+                "Einstellungen: \n" +
+                "[4]: Feldgröße    einstellen //TODO \n" +
+                "[5]: Blockgröße   einstellen //hack \n" +
+                "[6]: Spielregeln //TODO \n" +
+                "[7]: Spiel beenden \n"
+    );
     }
 }

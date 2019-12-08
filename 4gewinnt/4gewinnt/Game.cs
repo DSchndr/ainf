@@ -2,18 +2,20 @@ using System;
 
 namespace _4gewinnt
 {
-
     class Game
     {
-        private int fieldx = 0; int fieldy = 0; //do not change this. 
+        private int fieldx = 0, fieldy = 0; //do not change this. 
         private byte color = 1; //start color
-        private bool loop = true; //replace with isgamewon
+        private bool loop = true;
         private byte tries = 42;
 
-        public void startgame()
+        public Game()
         {
             GameVariables.blockarr = new byte[7, 6]; //reset array
+            //center game area
+            GameSettings.offsetx = Console.WindowWidth / 2 - (7 * GameSettings.blockscale + 7) / 2;
             fieldx = 7 * GameSettings.blockscale + 7 + GameSettings.offsetx; fieldy = 6 * GameSettings.blockscale + 6 + GameSettings.offsety; //field size
+
             Console.Clear();
             foreach (string z in Titlearray) //draw title
             {
@@ -25,7 +27,8 @@ namespace _4gewinnt
             winnermessage();
         }
 
-        void gameloop()
+        // Loop für das Spiel
+        private void gameloop()
         {
             while (loop)
             {
@@ -34,8 +37,8 @@ namespace _4gewinnt
                 {
                     Random rng = new Random();
                     System.Threading.Thread.Sleep(1000); //wait 1 secs
-                    paintblock2(rng.Next(6));
-                    continue;
+                    paintblockw(rng.Next(6));
+                    continue; //nutzereingabe überspringen
                 }
                 if (Console.KeyAvailable)
                 {
@@ -43,25 +46,25 @@ namespace _4gewinnt
                     switch (key.Key)
                     {
                         case ConsoleKey.D1:
-                            paintblock2(0);
+                            paintblockw(0);
                             break;
                         case ConsoleKey.D2:
-                            paintblock2(1);
+                            paintblockw(1);
                             break;
                         case ConsoleKey.D3:
-                            paintblock2(2);
+                            paintblockw(2);
                             break;
                         case ConsoleKey.D4:
-                            paintblock2(3);
+                            paintblockw(3);
                             break;
                         case ConsoleKey.D5:
-                            paintblock2(4);
+                            paintblockw(4);
                             break;
                         case ConsoleKey.D6:
-                            paintblock2(5);
+                            paintblockw(5);
                             break;
                         case ConsoleKey.D7:
-                            paintblock2(6);
+                            paintblockw(6);
                             break;
                     }
                 }
@@ -69,24 +72,24 @@ namespace _4gewinnt
             }
         }
 
-        public void onlinegame()
+        private void onlinegame()
         {
 
         }
-        public void onlinegameupdate()
-        {
+        private void onlinegameupdate()
+        { /*
             int abstand = GameSettings.blockscale - 1;
             Console.SetCursorPosition(GameSettings.offsetx + 1, GameSettings.offsety - 1);
             for (int i = 1; i < 8; i++)
             {
                 Console.Write("{0}%", "10");
                 Console.SetCursorPosition(GameSettings.offsetx + 1 + (1 + GameSettings.blockscale) * i, GameSettings.offsety - 1);
-            }
+            }*/
         }
 
-        void winnermessage()
+        // Dies wird nach dem loop ausgeführt und gibt den gewinner an
+        private void winnermessage()
         {
-            Console.SetCursorPosition(0, 3);
             string pl;
             if (color == 2)
             {
@@ -96,17 +99,34 @@ namespace _4gewinnt
             }
             else
             {
-                pl = "Blau";
+                if (GameVariables.dumbai) pl = "(du)";
+                else pl = "Blau";
                 Console.ForegroundColor = ConsoleColor.DarkBlue;
             }
 
-            if (GameVariables.onlinegame) Console.Write("Team");
-            else Console.Write("Spieler");
-            Console.Write(" {0} hat das Spiel gewonnen!\nDrücke Enter um in das Menü zu kommen\n", pl);
-            Console.ReadLine();
+            if (tries > 0)
+            {
+                Console.SetCursorPosition(GameSettings.offsetx, 3);
+                if (GameVariables.onlinegame) Console.Write("Team");
+                else Console.Write("Spieler");
+            }
+            else pl = "Niemand";
+            Console.Write(" {0} hat das Spiel gewonnen!\n", pl);
+            Console.SetCursorPosition(GameSettings.offsetx, 4);
+            Console.Write("Drücke Enter um in das Menü zu kommen");
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+                    if (key.Key == ConsoleKey.Enter) break;
+                }
+            }
             Console.ResetColor();
         }
-        byte changeplayer(byte Color = 1)
+
+        // Ändert den Spieler / die Farbe (Blau oder Rot) und gibt den Spieler der den nächsten zug machen soll an.
+        private byte changeplayer(byte Color = 1)
         {
             string Player;
             if (Color == 1)
@@ -119,16 +139,19 @@ namespace _4gewinnt
             else
             {
                 color = 1;
-                Player = " Rot ";
+                if (GameVariables.dumbai) Player = "Die AI ";
+                else Player = " Rot ";
                 Console.ForegroundColor = ConsoleColor.DarkRed;
             }
-            Console.SetCursorPosition(4, 3);
-            Console.Write("{0}ist dran ", Player);
+            Console.SetCursorPosition(GameSettings.offsetx, 3);
+            Console.Write("{0}ist dran   ", Player);
             return color;
         }
 
-        void drawgamearea()
+        // Malt die Spielfläche in der die Blöcke gesetzt werden 
+        public void drawgamearea()
         {
+            // Horizontal
             for (int x = GameSettings.offsetx; x <= fieldx; x = x + 1)
             {
                 for (int y = GameSettings.offsety; y <= fieldy; y = y + GameSettings.blockscale + 1)
@@ -138,7 +161,7 @@ namespace _4gewinnt
                     Console.Write("█");
                 }
             }
-
+            // Vertikal
             for (int x = GameSettings.offsetx; x <= fieldx; x = x + GameSettings.blockscale + 1)
             {
                 for (int y = GameSettings.offsety; y <= fieldy; y = y + 1)
@@ -148,32 +171,37 @@ namespace _4gewinnt
                     Console.Write("█");
                 }
             }
+            // Text unter dem Spielfeld
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            for (int i = 0; i <= 6; i++)
+            {
+                Console.SetCursorPosition(GameSettings.offsetx + (1 + GameSettings.blockscale) * i + GameSettings.blockscale / 2, fieldy + 1);
+                Console.Write(i + 1);
+            }
         }
 
         // Wrapper für paintblock, damit die blöcke an der untersten position platziert werden, der spieler gewechselt wird und geprüft wird ob das spiel nach dem zug gewonnen ist.
-        void paintblock2(int x)
+        public void paintblockw(int x)
         {
+            // An der untersten Stelle beginnen und bis zum nächsten leeren feld hochgehen
             for (int i = 5; i >= 0; i--)
             {
                 if (GameVariables.blockarr[x, i] == 0)
                 {
+                    //                    col row
                     GameVariables.blockarr[x, i] = color;
                     paintblock(x, i);
                     color = changeplayer(color);
-                    if (GameLogic.checkfield(x, i)) { loop = false; }
+                    if (GameLogic.check(x, i)) loop = false;
                     tries--;
-                    if (tries == 0)
-                    {
-                        loop = false;
-                        Console.WriteLine("Unentschieden"); //fixme
-                        Console.ReadKey();
-                        return;
-                    }
+                    if (tries == 0) loop = false;
                     break;
                 }
             }
         }
-        void paintblock(int posx, int posy)
+
+        // Malt einen Block mit der Größe von blockscale an der angegeben position in dem spielfeld
+        private void paintblock(int posx, int posy)
         {
             posx = GameSettings.offsetx + 1 + (1 + GameSettings.blockscale) * posx;
             posy = GameSettings.offsety + 1 + (1 + GameSettings.blockscale) * posy;
