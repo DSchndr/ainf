@@ -7,9 +7,10 @@ namespace _4gewinnt
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8; //unicode > ascii
-            
-            try { GameMenu gamemenu = new GameMenu();}
-            catch (Exception ex){
+
+            try { GameMenu gamemenu = new GameMenu(); }
+            catch (Exception ex)
+            {
                 Console.Clear();
                 Console.WriteLine("Excuse moi!\nThe game has crashed :/\n\nSend this to the developer:\n");
                 Console.WriteLine(ex.ToString());
@@ -20,10 +21,10 @@ namespace _4gewinnt
 
     static class GameSettings
     {
-        public static int FieldSizeMinX = 50;
-        public static int FieldSizeMinY = 50;
+        public static int FieldSizeMinX = 45;
+        public static int FieldSizeMinY = 45;
         public static int blockscale = 6; //1: 1x1; 2: 2x2; 3: 3x3;...
-        public static int offsetx = 4, offsety = 6; //sets offset for game area
+        public static int offsetx = 4, offsety = 8; //sets offset for game area
 
     }
     static class GameVariables
