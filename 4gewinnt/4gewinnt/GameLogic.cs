@@ -1,5 +1,6 @@
 namespace _4gewinnt
 {
+
     class GameLogic
     {
 
