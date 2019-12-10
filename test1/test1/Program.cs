@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System;
 
 namespace test1
 {
@@ -7,6 +9,9 @@ namespace test1
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            test();
+            Console.ReadLine();
         }
+        
     }
 }

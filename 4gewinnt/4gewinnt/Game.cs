@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.InteropServices;
+
 
 namespace _4gewinnt
 {
@@ -8,35 +10,68 @@ namespace _4gewinnt
         private byte color = 1; //start color
         private bool loop = true;
         private byte tries = 42;
+        private int consolewidth, consoleheight; // initial window size
 
         public Game()
         {
+            consoleheight = Console.WindowHeight;
+            consolewidth = Console.WindowWidth;
             GameVariables.blockarr = new byte[7, 6]; //reset array
-            //center game area
-            GameSettings.offsetx = Console.WindowWidth / 2 - (7 * GameSettings.blockscale + 7) / 2;
-            fieldx = 7 * GameSettings.blockscale + 7 + GameSettings.offsetx; fieldy = 6 * GameSettings.blockscale + 6 + GameSettings.offsety; //field size
-
-            Console.Clear();
-            foreach (string z in Titlearray) //draw title
-            {
-                Console.WriteLine(z);
-            }
-            drawgamearea();
+            draw();
             changeplayer();
             gameloop();
             winnermessage();
         }
 
+        private void draw()
+        {
+            //center game area
+            GameSettings.offsetx = Console.WindowWidth / 2 - (7 * GameSettings.blockscale + 7) / 2;
+            fieldx = 7 * GameSettings.blockscale + 7 + GameSettings.offsetx; fieldy = 6 * GameSettings.blockscale + 6 + GameSettings.offsety; //field size
+
+            Console.Clear();
+            Console.ResetColor();
+            foreach (string z in Titlearray) //draw title
+            {
+                if (Console.WindowWidth < 72) { Console.WriteLine("4 Gewinnt"); break; } //fenster zu klein
+                //if (Console.WindowWidth <= 107) Console.SetCursorPosition(0, Console.CursorTop);
+                else Console.SetCursorPosition(Console.WindowWidth / 2 - 68 / 2, Console.CursorTop);
+                Console.WriteLine(z);
+            }
+            drawgamearea();
+        }
+        private void redraw()
+        {
+            consoleheight = Console.WindowHeight;
+            consolewidth = Console.WindowWidth;
+            Console.Clear();
+            Console.WriteLine("*** RESIZING WINDOW ***\n*** RESIZING WINDOW ***\n*** RESIZING WINDOW ***\n*** RESIZING WINDOW ***\n*** RESIZING WINDOW ***\n*** RESIZING WINDOW ***\n");
+            System.Threading.Thread.Sleep(500);
+            draw();
+            byte origc = color;
+            for (int x = 0; x <= 6; x++)
+            {
+                for (int y = 0; y <= 5; y++)
+                {
+                    color = GameVariables.blockarr[x, y];
+                    paintblock(x, y);
+                }
+            }
+            color = origc;
+        }
         // Loop für das Spiel
         private void gameloop()
         {
             while (loop)
             {
+                //Größe der Console hat sich verändert -> redraw
+                if (!(Console.WindowHeight == consoleheight) || !(Console.WindowWidth == consolewidth)) redraw();
                 Console.SetCursorPosition(fieldx + 1, fieldy + 1); //workaround
+                //BUG: Spiel *kann* sich aufhängen wenn der "rng" immer den gleichen zahlenbereich liefert der nicht gesetzt werden kann.
                 if (GameVariables.dumbai && color == 1)
                 {
                     Random rng = new Random();
-                    System.Threading.Thread.Sleep(1000); //wait 1 secs
+                    System.Threading.Thread.Sleep(1000); //wait 1 sec
                     paintblockw(rng.Next(6));
                     continue; //nutzereingabe überspringen
                 }
@@ -66,6 +101,9 @@ namespace _4gewinnt
                         case ConsoleKey.D7:
                             paintblockw(6);
                             break;
+                        case ConsoleKey.Escape:
+                            loop = false;
+                            break;
                     }
                 }
                 if (GameVariables.onlinegame) onlinegameupdate();
@@ -77,14 +115,13 @@ namespace _4gewinnt
 
         }
         private void onlinegameupdate()
-        { /*
-            int abstand = GameSettings.blockscale - 1;
-            Console.SetCursorPosition(GameSettings.offsetx + 1, GameSettings.offsety - 1);
-            for (int i = 1; i < 8; i++)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            for (int i = 0; i <= 6; i++)
             {
-                Console.Write("{0}%", "10");
-                Console.SetCursorPosition(GameSettings.offsetx + 1 + (1 + GameSettings.blockscale) * i, GameSettings.offsety - 1);
-            }*/
+                Console.SetCursorPosition(GameSettings.offsetx + (1 + GameSettings.blockscale) * i + GameSettings.blockscale / 2, 5);
+                Console.Write("0%");
+            }
         }
 
         // Dies wird nach dem loop ausgeführt und gibt den gewinner an
@@ -106,13 +143,13 @@ namespace _4gewinnt
 
             if (tries > 0)
             {
-                Console.SetCursorPosition(GameSettings.offsetx, 3);
+                Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 2);
                 if (GameVariables.onlinegame) Console.Write("Team");
                 else Console.Write("Spieler");
             }
             else pl = "Niemand";
             Console.Write(" {0} hat das Spiel gewonnen!\n", pl);
-            Console.SetCursorPosition(GameSettings.offsetx, 4);
+            Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 1);
             Console.Write("Drücke Enter um in das Menü zu kommen");
             while (true)
             {
@@ -128,7 +165,7 @@ namespace _4gewinnt
         // Ändert den Spieler / die Farbe (Blau oder Rot) und gibt den Spieler der den nächsten zug machen soll an.
         private byte changeplayer(byte Color = 1)
         {
-            string Player;
+            string Player = "";
             if (Color == 1)
             {
                 color = 2;
@@ -136,14 +173,16 @@ namespace _4gewinnt
                 else Player = "Blau ";
                 Console.ForegroundColor = ConsoleColor.DarkBlue;
             }
-            else
+            else if (Color == 2)
             {
                 color = 1;
                 if (GameVariables.dumbai) Player = "Die AI ";
                 else Player = " Rot ";
                 Console.ForegroundColor = ConsoleColor.DarkRed;
             }
-            Console.SetCursorPosition(GameSettings.offsetx, 3);
+            else throw new Exception("Invalid color for changeplayer()");
+            if (GameVariables.onlinegame) Player = "Team " + Player;
+            Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 2);
             Console.Write("{0}ist dran   ", Player);
             return color;
         }
@@ -151,6 +190,9 @@ namespace _4gewinnt
         // Malt die Spielfläche in der die Blöcke gesetzt werden 
         public void drawgamearea()
         {
+            //int r = 250;
+            //int g = 0;
+            //int b = 255;
             // Horizontal
             for (int x = GameSettings.offsetx; x <= fieldx; x = x + 1)
             {
@@ -158,6 +200,13 @@ namespace _4gewinnt
                 {
                     Console.SetCursorPosition(x, y);
                     Console.ForegroundColor = ConsoleColor.Magenta;
+                    /*if (ansisup()) {
+                        Console.ResetColor();
+                        Console.Write("\u001b[38;2;{0};{1};{2}m█\u001b[0m", r,g,b);
+                        r -= 15;
+                        b -= 30;
+                    }
+                    else*/
                     Console.Write("█");
                 }
             }
@@ -207,7 +256,8 @@ namespace _4gewinnt
             posy = GameSettings.offsety + 1 + (1 + GameSettings.blockscale) * posy;
 
             if (color == 1) Console.ForegroundColor = ConsoleColor.DarkRed;
-            else Console.ForegroundColor = ConsoleColor.DarkBlue;
+            else if (color == 2) Console.ForegroundColor = ConsoleColor.DarkBlue;
+            else return;
 
             Console.SetCursorPosition(posx, posy);
             for (int x = 0; x <= GameSettings.blockscale - 1; x++)
@@ -219,11 +269,24 @@ namespace _4gewinnt
                 }
             }
         }
-        //TODO: Looks like shit
+        //~TODO: Looks like shit~ //DONE: Looks sic
         private String[] Titlearray = new string[]
             {
+
+                /*
                 @"        4     ",
                 @"        gewinnt",
+                */
+@"██╗  ██╗     ██████╗ ███████╗██╗    ██╗██╗███╗   ██╗███╗   ██╗████████╗",
+@"██║  ██║    ██╔════╝ ██╔════╝██║    ██║██║████╗  ██║████╗  ██║╚══██╔══╝",
+@"███████║    ██║  ███╗█████╗  ██║ █╗ ██║██║██╔██╗ ██║██╔██╗ ██║   ██║   ",
+@"╚════██║    ██║   ██║██╔══╝  ██║███╗██║██║██║╚██╗██║██║╚██╗██║   ██║   ",
+@"     ██║    ╚██████╔╝███████╗╚███╔███╔╝██║██║ ╚████║██║ ╚████║   ██║   ",
+@"     ╚═╝     ╚═════╝ ╚══════╝ ╚══╝╚══╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝   ╚═╝   "
             };
+        private bool ansisup()
+        {
+            return (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX));
+        }
     }
 }

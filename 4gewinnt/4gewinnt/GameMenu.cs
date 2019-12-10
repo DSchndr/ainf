@@ -2,8 +2,6 @@ using System.Text;
 using System;
 using System.Runtime.InteropServices;
 
-
-
 namespace _4gewinnt
 {
     class GameMenu
@@ -34,6 +32,9 @@ namespace _4gewinnt
                         case ConsoleKey.D5:
                             setBlocksize(); //set block size
                             goto A;
+                        case ConsoleKey.D6:
+                            tutorial();
+                            goto A;
                         case ConsoleKey.D7: goto B;
                     }
                 }
@@ -47,6 +48,10 @@ namespace _4gewinnt
             GameVariables.dumbai = false;
             GameVariables.onlinegame = false;
             goto A;
+        }
+
+        private void tutorial() {
+
         }
 
         // Setzt die Größe der Blöcke in dem Spiel
@@ -82,10 +87,12 @@ namespace _4gewinnt
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 Console.WriteLine("Linux/Macos detected. Please resize your console window manually.");
-                while ((Console.WindowHeight < GameSettings.FieldSizeMinX) || (Console.WindowWidth < GameSettings.FieldSizeMinY))
+                // worked on .net core 2.2
+                /*while ((Console.WindowHeight < GameSettings.FieldSizeMinX) || (Console.WindowWidth < GameSettings.FieldSizeMinY))
                 {
                     ;
-                }
+                }*/
+                Console.ReadLine();
             }
             else
             {
@@ -108,5 +115,9 @@ namespace _4gewinnt
                 "[6]: Spielregeln //TODO \n" +
                 "[7]: Spiel beenden \n"
     );
+
+
+
     }
+
 }
