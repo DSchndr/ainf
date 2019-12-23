@@ -7,7 +7,9 @@ namespace _4gewinnt
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8; //unicode > ascii
+            Console.CursorVisible = false;
 
+            //Crude "crash handler"
             try { GameMenu gamemenu = new GameMenu(); }
             catch (Exception ex)
             {
@@ -26,11 +28,5 @@ namespace _4gewinnt
         public static int blockscale = 6; //1: 1x1; 2: 2x2; 3: 3x3;...
         public static int offsetx = 4, offsety = 8; //sets offset for game area
 
-    }
-    static class GameVariables
-    {
-        public static byte[,] blockarr; //= new byte[7, 6];
-        public static bool onlinegame = false;
-        public static bool dumbai = false;
     }
 }

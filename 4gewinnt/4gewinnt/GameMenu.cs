@@ -23,31 +23,20 @@ namespace _4gewinnt
                     ConsoleKeyInfo key = Console.ReadKey(true);
                     switch (key.Key)
                     {
-                        case ConsoleKey.D1: goto C; //launch offline game
-                        case ConsoleKey.D2: GameVariables.dumbai = true; goto C; //launch ai game
-                        case ConsoleKey.D3: GameVariables.onlinegame = true; goto C; //launch online game
-                        case ConsoleKey.D4:
-                            //set field size
-                            goto A;
-                        case ConsoleKey.D5:
-                            setBlocksize(); //set block size
-                            goto A;
-                        case ConsoleKey.D6:
-                            tutorial();
-                            goto A;
+                        case ConsoleKey.D1: game = new Game(false, false); break; //launch offline game
+                        case ConsoleKey.D2: game = new Game(false, true); break; //launch ai game
+                        case ConsoleKey.D3: game = new Game(true, false); break; //launch online game
+                        case ConsoleKey.D4: break; //set field size TODO
+                        case ConsoleKey.D5: setBlocksize(); break; //set block size
+                        case ConsoleKey.D6: tutorial(); break;
                         case ConsoleKey.D7: goto B;
                     }
+                    goto A;
                 }
             }
 
         B:
             return;
-
-        C:
-            game = new Game();
-            GameVariables.dumbai = false;
-            GameVariables.onlinegame = false;
-            goto A;
         }
 
         private void tutorial() {

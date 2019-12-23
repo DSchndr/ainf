@@ -5,7 +5,7 @@ namespace _4gewinnt
 
         //Ходим по полю и проверяем, выиграна игра или нет
 
-        public static bool check(int Col, int Row)
+        public static bool check(int Col, int Row, byte[,] blockarr)
         {
             /*
             Row & Col = Der gesetzte punkt
@@ -73,27 +73,27 @@ namespace _4gewinnt
                         case 1:
                         case 2:
                             col = Col;
-                            if (row < GameVariables.blockarr.GetLowerBound(1) || row > GameVariables.blockarr.GetUpperBound(1)) { goto end; }
+                            if (row < blockarr.GetLowerBound(1) || row > blockarr.GetUpperBound(1)) { goto end; }
                             break;
                         case 3:
                         case 4:
                             row = Row;
-                            if (col < GameVariables.blockarr.GetLowerBound(0) || col > GameVariables.blockarr.GetUpperBound(0)) { goto end; }
+                            if (col < blockarr.GetLowerBound(0) || col > blockarr.GetUpperBound(0)) { goto end; }
                             break;
                         case 5:
-                            if (row < GameVariables.blockarr.GetLowerBound(1) || col < GameVariables.blockarr.GetLowerBound(0)) goto end;
+                            if (row < blockarr.GetLowerBound(1) || col < blockarr.GetLowerBound(0)) goto end;
                             break;
                         case 6:
-                            if (row > GameVariables.blockarr.GetUpperBound(1) || col > GameVariables.blockarr.GetUpperBound(0)) goto end;
+                            if (row > blockarr.GetUpperBound(1) || col > blockarr.GetUpperBound(0)) goto end;
                             break;
                         case 7:
-                            if (row < GameVariables.blockarr.GetLowerBound(1) || col > GameVariables.blockarr.GetUpperBound(0)) goto end;
+                            if (row < blockarr.GetLowerBound(1) || col > blockarr.GetUpperBound(0)) goto end;
                             break;
                         case 8:
-                            if (row > GameVariables.blockarr.GetUpperBound(1) || col < GameVariables.blockarr.GetLowerBound(0)) goto end;
+                            if (row > blockarr.GetUpperBound(1) || col < blockarr.GetLowerBound(0)) goto end;
                             break;
                     }
-                    if (GameVariables.blockarr[col,row] == GameVariables.blockarr[Col, Row])
+                    if (blockarr[col,row] == blockarr[Col, Row])
                     {
                         matches++;
                         if (matches == 4) return true;
