@@ -23,12 +23,12 @@ namespace _4gewinnt
                     ConsoleKeyInfo key = Console.ReadKey(true);
                     switch (key.Key)
                     {
-                        case ConsoleKey.D1: game = new Game(false, false); break; //launch offline game
-                        case ConsoleKey.D2: game = new Game(false, true); break; //launch ai game
-                        case ConsoleKey.D3: game = new Game(true, false); break; //launch online game
+                        case ConsoleKey.D1: game = new Game(false, false, false); break; //launch offline game
+                        case ConsoleKey.D2: game = new Game(false, true, false); break; //launch ai game
+                        case ConsoleKey.D3: game = new Game(true, false, false); break; //launch online game
                         case ConsoleKey.D4: break; //set field size TODO
                         case ConsoleKey.D5: setBlocksize(); break; //set block size
-                        case ConsoleKey.D6: tutorial(); break;
+                        case ConsoleKey.D6: game = new Game(false, false, true); break;
                         case ConsoleKey.D7: goto B;
                     }
                     goto A;
@@ -37,10 +37,6 @@ namespace _4gewinnt
 
         B:
             return;
-        }
-
-        private void tutorial() {
-
         }
 
         // Setzt die Größe der Blöcke in dem Spiel

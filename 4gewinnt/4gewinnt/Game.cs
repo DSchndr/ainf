@@ -1,3 +1,5 @@
+//TODO: Implement check to find out if the gamearea fits into the console; crashes game on windows
+
 using System;
 using System.Text;
 
@@ -10,20 +12,111 @@ namespace _4gewinnt
         private bool loop = true; //game ends if false
         private byte tries = 42; // we have 7*6 tries
         private int consolewidth, consoleheight; // initial window size
-        private bool isonlinegame, isaigame;
-        private static byte[,] blockarr = new byte[7, 6];
+        private bool isonlinegame, isaigame, istutorial;
+        private byte[,] blockarr = new byte[7, 6];
 
-        public Game(bool IsOnlineGame, bool IsAiGame)
+        public Game(bool IsOnlineGame, bool IsAiGame, bool IsTutorial)
         {
             isonlinegame = IsOnlineGame;
             isaigame = IsAiGame;
+            istutorial = IsTutorial;
             consoleheight = Console.WindowHeight;
             consolewidth = Console.WindowWidth;
-            draw();
-            changeplayer();
-            gameloop();
-            winnermessage();
+            if (istutorial) tutorial();
+            else
+            {
+                draw();
+                changeplayer();
+                gameloop();
+                winnermessage();
+            }
         }
+
+        #region Tutorial
+        //TODO: polish this code area
+        private void tutorial()
+        {
+            draw();
+            for (int i = 0; i <= 4; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 2);
+                        Console.Write("4 Gewinnt ist eigentlich garnicht so komplex.");
+                        Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 1);
+                        Console.Write("Hier siehst du das 6*7 Spielfeld");
+                        break;
+                    case 1:
+                        redraw();
+                        Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 2);
+                        Console.Write("Du setzt die Blöcke indem du");
+                        Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 1);
+                        Console.Write("die Tasten 1-7 drückst.");
+                        break;
+                    case 2:
+                        redraw();
+                        Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 2);
+                        Console.Write("Probiers aus!");
+                        color = 2;
+                        while (loop)
+                        {
+                            if (Console.KeyAvailable)
+                            {
+                                ConsoleKeyInfo key = Console.ReadKey(true);
+                                if (char.IsDigit(key.KeyChar)) // 0 - 9
+                                {
+                                    paintblockw(int.Parse(key.KeyChar.ToString()) - 1);
+                                }
+                                else if (key.Key == ConsoleKey.Escape) //Andere taste
+                                {
+                                    loop = false;
+                                    tries = 0;
+                                }
+                            }
+                        }
+                        Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 1);
+                        Console.Write("Gut gemacht!");
+
+                        break;
+                    case 3:
+                        blockarr[0, 5] = 1;
+                        blockarr[1, 5] = 1;
+                        blockarr[2, 5] = 1;
+                        blockarr[3, 5] = 1;
+
+                        redraw();
+                        Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 2);
+                        Console.Write("Wenn du 4 Blöcke horizontal");
+                        Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 1);
+                        Console.Write("gesetzt hast hast du das Spiel gewonnen!");
+                        break;
+                    case 4:
+                        blockarr[1, 2] = 2;
+                        blockarr[2, 3] = 2;
+                        blockarr[3, 4] = 2;
+                        blockarr[4, 5] = 2;
+
+                        blockarr[6, 5] = 1;
+                        blockarr[6, 4] = 1;
+                        blockarr[6, 3] = 1;
+                        blockarr[6, 2] = 1;
+                        redraw();
+                        Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 2);
+                        Console.Write("Das ganze geht auch");
+                        Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 1);
+                        Console.Write("Vertikal und Diagonal");
+                        break;
+                }
+                waitforenter();
+            }
+            Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 1);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("Drücke [Enter] um in das Menü zu kommen!");
+            waitforenter();
+            Console.ResetColor();
+        }
+        #endregion
 
         #region Drawing
         private void draw()
@@ -48,8 +141,11 @@ namespace _4gewinnt
             consoleheight = Console.WindowHeight;
             consolewidth = Console.WindowWidth;
             Console.Clear();
-            Console.WriteLine(new StringBuilder().Insert(0, "*** RESIZING WINDOW ***\n", 8).ToString());
-            System.Threading.Thread.Sleep(500);
+            if (!istutorial)
+            {
+                Console.WriteLine(new StringBuilder().Insert(0, "*** REDRAWING WINDOW ***\n", 8).ToString());
+                System.Threading.Thread.Sleep(500);
+            }
             draw();
             byte origc = color;
             for (int x = 0; x <= 6; x++)
@@ -139,7 +235,7 @@ namespace _4gewinnt
                     continue; //nutzereingabe überspringen
                 }
                 #endregion
-                
+
                 #region Userinput
                 if (Console.KeyAvailable)
                 {
@@ -178,6 +274,20 @@ namespace _4gewinnt
         #endregion
 
         #region Utils
+
+        //Wartet bis enter gedrückt wird
+        private void waitforenter()
+        {
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+                    if (key.Key == ConsoleKey.Enter) break;
+                }
+            }
+        }
+
         // Dies wird nach dem loop ausgeführt und gibt den gewinner an
         private void winnermessage()
         {
@@ -206,14 +316,7 @@ namespace _4gewinnt
             Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 1);
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write("Drücke [Enter] um in das Menü zu kommen!");
-            while (true)
-            {
-                if (Console.KeyAvailable)
-                {
-                    ConsoleKeyInfo key = Console.ReadKey(true);
-                    if (key.Key == ConsoleKey.Enter) break;
-                }
-            }
+            waitforenter();
             Console.ResetColor();
         }
 
@@ -229,7 +332,10 @@ namespace _4gewinnt
                     //      col row
                     blockarr[x, i] = color;
                     paintblock(x, i);
-                    color = changeplayer(color);
+                    if (!istutorial)
+                    {
+                        color = changeplayer(color);
+                    }
                     if (GameLogic.check(x, i, blockarr)) loop = false;
                     tries--;
                     if (tries == 0) loop = false;
