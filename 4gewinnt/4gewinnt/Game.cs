@@ -121,9 +121,27 @@ namespace _4gewinnt
         #region Drawing
         private void draw()
         {
+            int fails = 0;
+        A:
+            fails++;
             //center game area
             GameSettings.offsetx = Console.WindowWidth / 2 - (GameSettings.GameAreaX * GameSettings.blockscale + GameSettings.GameAreaX) / 2;
             fieldx = GameSettings.GameAreaX * GameSettings.blockscale + GameSettings.GameAreaX + GameSettings.offsetx; fieldy = GameSettings.GameAreaY * GameSettings.blockscale + GameSettings.GameAreaY + GameSettings.offsety; //field size
+
+            // HACK: Set blockscale automatically
+            if (GameSettings.autoblockscale)
+            {
+                if ((fieldx > Console.WindowWidth) || (fieldy + 1 > Console.WindowHeight))
+                {
+                    GameSettings.blockscale--;
+                    goto A;
+                }
+                else if ((fieldy + 1 < Console.WindowHeight) && (fails <= 2))
+                {
+                    GameSettings.blockscale++;
+                    goto A;
+                }
+            }
 
             Console.Clear();
             Console.ResetColor();
@@ -188,7 +206,7 @@ namespace _4gewinnt
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             for (int i = 0; i < GameSettings.GameAreaX; i++)
             {
-                Console.SetCursorPosition(GameSettings.offsetx + (1 + GameSettings.blockscale) * i + GameSettings.blockscale / 2, fieldy + 1);
+                Console.SetCursorPosition(GameSettings.offsetx + (1 + GameSettings.blockscale) * i + GameSettings.blockscale / 2 + 1, fieldy + 1);
                 Console.Write(i + 1);
             }
         }
@@ -367,7 +385,7 @@ namespace _4gewinnt
             else throw new Exception("Invalid color for changeplayer()");
             if (isonlinegame) Player = "Team " + Player;
             Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 2);
-            Console.Write("${Player}ist dran   ");
+            Console.Write($"{Player}ist dran   ");
             return color;
         }
 

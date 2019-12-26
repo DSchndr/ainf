@@ -27,6 +27,7 @@ namespace _4gewinnt
         public static int FieldSizeMinY = 60; 
         public static int GameAreaX = 7; //9 ist das limit
         public static int GameAreaY = 6; //? ist das limit
+        public static bool autoblockscale = true;
         public static int blockscale = 6; //1: 1x1; 2: 2x2; 3: 3x3;...
         public static int offsetx = 4, offsety = 8; //sets offset for game area
 

@@ -68,7 +68,8 @@ namespace _4gewinnt
         // Setzt die Größe der Blöcke in dem Spiel
         private void setBlocksize()
         {
-            Console.WriteLine("Press ESC to return to menu");
+            GameSettings.autoblockscale = false;
+            Console.WriteLine("Press ESC to return to menu | Autoblockscale is disabled!");
             while (true)
             {
                 Console.SetCursorPosition(0, Console.CursorTop);
