@@ -10,11 +10,11 @@ namespace _4gewinnt
         private int fieldx = 0, fieldy = 0; //do not change this. 
         private byte color = 1; //start color
         private bool loop = true; //game ends if false
-        private byte tries = 42; // we have 7*6 tries
+        private int tries = GameSettings.GameAreaX * GameSettings.GameAreaY;//42; // we have 7*6 tries
         private int consolewidth, consoleheight; // initial window size
         private bool isonlinegame, isaigame, istutorial;
-        private byte[,] blockarr = new byte[7, 6];
-
+        //private byte[,] blockarr = new byte[7, 6];
+        private byte[,] blockarr = new byte[GameSettings.GameAreaX, GameSettings.GameAreaY];
         public Game(bool IsOnlineGame, bool IsAiGame, bool IsTutorial)
         {
             isonlinegame = IsOnlineGame;
@@ -122,8 +122,8 @@ namespace _4gewinnt
         private void draw()
         {
             //center game area
-            GameSettings.offsetx = Console.WindowWidth / 2 - (7 * GameSettings.blockscale + 7) / 2;
-            fieldx = 7 * GameSettings.blockscale + 7 + GameSettings.offsetx; fieldy = 6 * GameSettings.blockscale + 6 + GameSettings.offsety; //field size
+            GameSettings.offsetx = Console.WindowWidth / 2 - (GameSettings.GameAreaX * GameSettings.blockscale + GameSettings.GameAreaX) / 2;
+            fieldx = GameSettings.GameAreaX * GameSettings.blockscale + GameSettings.GameAreaX + GameSettings.offsetx; fieldy = GameSettings.GameAreaY * GameSettings.blockscale + GameSettings.GameAreaY + GameSettings.offsety; //field size
 
             Console.Clear();
             Console.ResetColor();
@@ -148,9 +148,9 @@ namespace _4gewinnt
             }
             draw();
             byte origc = color;
-            for (int x = 0; x <= 6; x++)
+            for (int x = 0; x <= GameSettings.GameAreaX - 1; x++)
             {
-                for (int y = 0; y <= 5; y++)
+                for (int y = 0; y <= GameSettings.GameAreaY - 1; y++)
                 {
                     color = blockarr[x, y];
                     paintblock(x, y);
@@ -184,7 +184,7 @@ namespace _4gewinnt
             }
             // Text unter dem Spielfeld
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            for (int i = 0; i <= 6; i++)
+            for (int i = 0; i < GameSettings.GameAreaX; i++)
             {
                 Console.SetCursorPosition(GameSettings.offsetx + (1 + GameSettings.blockscale) * i + GameSettings.blockscale / 2, fieldy + 1);
                 Console.Write(i + 1);
@@ -323,9 +323,9 @@ namespace _4gewinnt
         // Wrapper für paintblock, damit die blöcke an der untersten position platziert werden, der spieler gewechselt wird und geprüft wird ob das spiel nach dem zug gewonnen ist.
         public void paintblockw(int x)
         {
-            if ((x >= 7) || (x < 0)) return;
+            if ((x >= GameSettings.GameAreaX) || (x < 0)) return;
             // An der untersten Stelle beginnen und bis zum nächsten leeren feld hochgehen
-            for (int i = 5; i >= 0; i--)
+            for (int i = GameSettings.GameAreaY - 1; i >= 0; i--)
             {
                 if (blockarr[x, i] == 0)
                 {

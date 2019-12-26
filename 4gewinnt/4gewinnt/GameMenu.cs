@@ -81,6 +81,7 @@ namespace _4gewinnt
             }
             else
             {
+                //Console.SetWindowSize();
                 Console.SetWindowSize(GameSettings.FieldSizeMinX, GameSettings.FieldSizeMinY);
             }
             Console.Clear();
@@ -97,7 +98,7 @@ namespace _4gewinnt
                 "Einstellungen: \n" +
                 "[4]: Feldgröße    einstellen //TODO \n" +
                 "[5]: Blockgröße   einstellen //hack \n" +
-                "[6]: Spielregeln //TODO \n" +
+                "[6]: Spielregeln \n" +
                 "[7]: Spiel beenden \n"
     );
 
