@@ -182,6 +182,8 @@ namespace _4gewinnt
                     Console.Write("█");
                 }
             }
+
+            //BUG: bei 1x1 ist der text um 1 zu weit links 
             // Text unter dem Spielfeld
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             for (int i = 0; i < GameSettings.GameAreaX; i++)
@@ -365,7 +367,7 @@ namespace _4gewinnt
             else throw new Exception("Invalid color for changeplayer()");
             if (isonlinegame) Player = "Team " + Player;
             Console.SetCursorPosition(GameSettings.offsetx, GameSettings.offsety - 2);
-            Console.Write("{0}ist dran   ", Player);
+            Console.Write("${Player}ist dran   ");
             return color;
         }
 

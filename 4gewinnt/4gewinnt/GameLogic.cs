@@ -73,12 +73,12 @@ namespace _4gewinnt
                         case 1:
                         case 2:
                             col = Col;
-                            if (row < blockarr.GetLowerBound(1) || row > blockarr.GetUpperBound(1)) { goto end; }
+                            if (row < blockarr.GetLowerBound(1) || row > blockarr.GetUpperBound(1)) goto end;
                             break;
                         case 3:
                         case 4:
                             row = Row;
-                            if (col < blockarr.GetLowerBound(0) || col > blockarr.GetUpperBound(0)) { goto end; }
+                            if (col < blockarr.GetLowerBound(0) || col > blockarr.GetUpperBound(0)) goto end; 
                             break;
                         case 5:
                             if (row < blockarr.GetLowerBound(1) || col < blockarr.GetLowerBound(0)) goto end;
@@ -98,7 +98,7 @@ namespace _4gewinnt
                         matches++;
                         if (matches == 4) return true;
                     }
-                    else {goto bf;}
+                    else goto bf;
                     // Label um die if abfrage zu überspringen
                     end: ;
                 }

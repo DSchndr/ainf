@@ -26,7 +26,7 @@ namespace _4gewinnt
                         case ConsoleKey.D1: game = new Game(false, false, false); break; //launch offline game
                         case ConsoleKey.D2: game = new Game(false, true, false); break; //launch ai game
                         case ConsoleKey.D3: game = new Game(true, false, false); break; //launch online game
-                        case ConsoleKey.D4: break; //set field size TODO
+                        case ConsoleKey.D4: setFieldsize(); break; //set field size
                         case ConsoleKey.D5: setBlocksize(); break; //set block size
                         case ConsoleKey.D6: game = new Game(false, false, true); break;
                         case ConsoleKey.D7: goto B;
@@ -37,6 +37,32 @@ namespace _4gewinnt
 
         B:
             return;
+        }
+        private void setFieldsize()
+        {
+            Console.WriteLine("Press ESC to return to menu | Press Left/Right to change the X size and Up/Down to change the Y size");
+            while (true)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.Write($"fieldsize: x: {GameSettings.GameAreaX} | y: {GameSettings.GameAreaY}");
+                switch (Console.ReadKey().Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (GameSettings.GameAreaY < 9) GameSettings.GameAreaY++;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (GameSettings.GameAreaY > 4) GameSettings.GameAreaY--;
+                        break;
+                    case ConsoleKey.RightArrow:
+                        if (GameSettings.GameAreaX < 9) GameSettings.GameAreaX++;
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        if (GameSettings.GameAreaX > 4) GameSettings.GameAreaX--;
+                        break;
+                    case ConsoleKey.Escape:
+                        return;
+                }
+            }
         }
 
         // Setzt die Größe der Blöcke in dem Spiel
@@ -96,7 +122,7 @@ namespace _4gewinnt
                 "[3]: Online                        spielen //TODO \n" +
                 "\n" +
                 "Einstellungen: \n" +
-                "[4]: Feldgröße    einstellen //TODO \n" +
+                "[4]: Feldgröße    einstellen \n" +
                 "[5]: Blockgröße   einstellen //hack \n" +
                 "[6]: Spielregeln \n" +
                 "[7]: Spiel beenden \n"
