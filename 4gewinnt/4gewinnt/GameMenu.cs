@@ -8,8 +8,6 @@ namespace _4gewinnt
     {
         public GameMenu()
         {
-            Game game = null;
-
             platformcheck();
 
         A:
@@ -23,12 +21,13 @@ namespace _4gewinnt
                     ConsoleKeyInfo key = Console.ReadKey(true);
                     switch (key.Key)
                     {
-                        case ConsoleKey.D1: game = new Game(false, false, false); break; //launch offline game
-                        case ConsoleKey.D2: game = new Game(false, true, false); break; //launch ai game
-                        case ConsoleKey.D3: game = new Game(true, false, false); break; //launch online game
+                        case ConsoleKey.D1: new Game(false, false, false); break; //offline game
+                        case ConsoleKey.D2: new Game(false, true,  false); break; //ai game
+                        case ConsoleKey.D3: new Game(true,  false, false); break; //online game
+                        case ConsoleKey.E:  new Game(true,  true,  true ); break; //buggy game
                         case ConsoleKey.D4: setFieldsize(); break; //set field size
                         case ConsoleKey.D5: setBlocksize(); break; //set block size
-                        case ConsoleKey.D6: game = new Game(false, false, true); break;
+                        case ConsoleKey.D6: new Game(false, false, true); break;  //tutorial "game"
                         case ConsoleKey.D7: goto B;
                     }
                     goto A;
@@ -69,7 +68,7 @@ namespace _4gewinnt
         private void setBlocksize()
         {
             GameSettings.autoblockscale = false;
-            Console.WriteLine("Press ESC to return to menu | Autoblockscale is disabled!");
+            Console.WriteLine("Press ESC to return to menu | Be warned: this can crash the game on windows");
             while (true)
             {
                 Console.SetCursorPosition(0, Console.CursorTop);

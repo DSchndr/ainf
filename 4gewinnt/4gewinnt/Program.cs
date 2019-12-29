@@ -23,6 +23,7 @@ namespace _4gewinnt
 
     static class GameSettings
     {
+        public static byte GameLogicDist = 4;
         public static int FieldSizeMinX = 45;
         public static int FieldSizeMinY = 60; 
         public static int GameAreaX = 7; //9 ist das limit

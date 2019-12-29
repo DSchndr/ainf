@@ -10,10 +10,9 @@ namespace _4gewinnt
         private int fieldx = 0, fieldy = 0; //do not change this. 
         private byte color = 1; //start color
         private bool loop = true; //game ends if false
-        private int tries = GameSettings.GameAreaX * GameSettings.GameAreaY;//42; // we have 7*6 tries
+        private int tries = GameSettings.GameAreaX * GameSettings.GameAreaY;
         private int consolewidth, consoleheight; // initial window size
         private bool isonlinegame, isaigame, istutorial;
-        //private byte[,] blockarr = new byte[7, 6];
         private byte[,] blockarr = new byte[GameSettings.GameAreaX, GameSettings.GameAreaY];
         public Game(bool IsOnlineGame, bool IsAiGame, bool IsTutorial)
         {
@@ -22,9 +21,14 @@ namespace _4gewinnt
             istutorial = IsTutorial;
             consoleheight = Console.WindowHeight;
             consolewidth = Console.WindowWidth;
-            if (istutorial) tutorial();
-            else
+            if (istutorial && (!isaigame || !isonlinegame)) tutorial();
+            else if (istutorial && isaigame && isonlinegame) drawsomethingnice(); //normally impossible, so we draw something nice instead of letting the code do wierd things ^^
+            else if (!istutorial)
             {
+                //can be removed if ticktacktoe is not implemented in final version
+                if ((GameSettings.GameAreaX == 3) && (GameSettings.GameAreaY == 3)) GameSettings.GameLogicDist = 3;
+                else GameSettings.GameLogicDist = 4;
+
                 draw();
                 changeplayer();
                 gameloop();
@@ -36,6 +40,7 @@ namespace _4gewinnt
         //TODO: polish this code area
         private void tutorial()
         {
+            GameSettings.GameAreaX = 7; GameSettings.GameAreaY = 6;
             draw();
             for (int i = 0; i <= 4; i++)
             {
@@ -219,7 +224,9 @@ namespace _4gewinnt
 
             if (color == 1) Console.ForegroundColor = ConsoleColor.DarkRed;
             else if (color == 2) Console.ForegroundColor = ConsoleColor.DarkBlue;
-            else return;
+            else if (color == 3) Console.ForegroundColor = ConsoleColor.DarkYellow;
+            //else return;
+            else Console.ResetColor();
 
             Console.SetCursorPosition(posx, posy);
             for (int x = 0; x <= GameSettings.blockscale - 1; x++)
@@ -227,7 +234,8 @@ namespace _4gewinnt
                 for (int y = 0; y <= GameSettings.blockscale - 1; y++)
                 {
                     Console.SetCursorPosition(x + posx, y + posy);
-                    Console.Write("█");
+                    if (color == 0) Console.Write(" ");
+                    else Console.Write("█");
                 }
             }
         }
@@ -251,7 +259,7 @@ namespace _4gewinnt
                 {
                     Random rng = new Random();
                     System.Threading.Thread.Sleep(1000); //wait 1 sec
-                    paintblockw(rng.Next(6));
+                    paintblockw(rng.Next(GameSettings.GameAreaX));
                     continue; //nutzereingabe überspringen
                 }
                 #endregion
@@ -344,6 +352,7 @@ namespace _4gewinnt
         public void paintblockw(int x)
         {
             if ((x >= GameSettings.GameAreaX) || (x < 0)) return;
+            if ((GameSettings.GameAreaX == 3) && (GameSettings.GameAreaY == 3)) { paintblockwttt(x); return; }
             // An der untersten Stelle beginnen und bis zum nächsten leeren feld hochgehen
             for (int i = GameSettings.GameAreaY - 1; i >= 0; i--)
             {
@@ -362,6 +371,73 @@ namespace _4gewinnt
                     break;
                 }
             }
+        }
+
+        // tick-tack-toe painblock wrapper
+
+        //todo: overwrite paintblockw with this when we are in "ttt mode"
+        private void paintblockwttt(int x)
+        {
+            //todo: code cleanup & find bug that causes out of bounds & fix ai
+            var tmpc = color;
+            var lp = true;
+            var y = 0;
+
+            while (lp)
+            {
+                //gefärbte blöcke überspringen; return wenn keine felder mehr frei sind
+                color = 3;
+                if (blockarr[x, y] == 0) { paintblock(x, y); }
+                else if (y == 2) return;
+                else { y++; continue; }
+
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+                    switch (key.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            if ((y > 0) && (blockarr[x, y - 1] == 0))
+                            {
+                                color = 0;
+                                paintblock(x, y);
+                                y--;
+                            }
+                            else if ((y == 2) && (blockarr[x, y - 2] == 0))
+                            {
+                                color = 0;
+                                paintblock(x, y);
+                                y -= 2;
+                            }
+                            break;
+                        case ConsoleKey.DownArrow:
+                            if (y < 2 && (blockarr[x, y + 1] == 0))
+                            {
+                                color = 0;
+                                paintblock(x, y);
+                                y++;
+                            }
+                            else if ((y == 0) && (blockarr[x, y + 2] == 0))
+                            {
+                                color = 0;
+                                paintblock(x, y);
+                                y += 2;
+                            }
+                            break;
+                        case ConsoleKey.Enter:
+                            lp = false;
+                            color = tmpc;
+                            paintblock(x, y);
+                            blockarr[x, y] = tmpc;
+                            continue;
+                    }
+                    color = 3;
+                    paintblock(x, y);
+                }
+            }
+            color = changeplayer(tmpc);
+            if (GameLogic.check(x, y, blockarr)) loop = false;
+            return;
         }
 
         // Ändert den Spieler / die Farbe (Blau oder Rot) und gibt den Spieler der den nächsten zug machen soll an.
@@ -388,8 +464,15 @@ namespace _4gewinnt
             Console.Write($"{Player}ist dran   ");
             return color;
         }
+        private void drawsomethingnice()
+        {
+            Console.Clear(); Console.Write(System.Text.Encoding.UTF8.GetString(Convert.FromBase64String("S2V5OiA=")));
+            if (Console.ReadLine() == System.Text.Encoding.UTF8.GetString(Convert.FromBase64String("dGh4"))) Console.WriteLine(System.Text.Encoding.UTF8.GetString(Convert.FromBase64String("RWFzdGVyZWdnIF5eCnRoeCB0bzogLi4u")));
+            Console.WriteLine("\nPress [Enter] to continue! :)"); Console.ReadLine(); GameSettings.GameAreaX = 3;GameSettings.GameAreaY = 3;new Game(false, false, false);GameSettings.GameAreaX = 7; GameSettings.GameAreaY = 6;
+            return;
+        }
 
-        //Title which gets drawn over the game area
+        //Title which gets drawn over the game area //TODO: Change to stringbuilder
         private String[] Titlearray = new string[]
             {
                 @"██╗  ██╗     ██████╗ ███████╗██╗    ██╗██╗███╗   ██╗███╗   ██╗████████╗",
