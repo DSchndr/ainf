@@ -16,14 +16,11 @@ namespace a3 {
             ausgebenSpielfeld (ref Spielfeld, true);
 
             //gameloop
-            bool gameloop = true;
-            while (gameloop) {
+            while (ende (ref Schiffe)) {
                 ausgebenSpielfeld (ref Spielfeld);
                 schiessen (ref Spielfeld, ref Schiffe);
-                gameloop = ende (ref Schiffe);
             }
             Console.WriteLine("Spiel gewonnen! Blah blah blah...\n Programmierer ist hier pennen gegangen und hatte kein Bock mehr.");
-
         }
 
         static void ausgebenSpielfeld (ref char[, ] arr, bool redraw = false) {
